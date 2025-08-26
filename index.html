@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Наши ссылки — Google Sheets</title>
+    <style>
+      :root {
+        --bg: #0f172a; /* slate-900 */
+        --panel: #111827; /* gray-900 */
+        --panel-2: #0b1222; /* darker */
+        --text: #e5e7eb; /* gray-200 */
+        --muted: #9ca3af; /* gray-400 */
+        --brand: #22c55e; /* green-500 */
+        --brand-2: #16a34a; /* green-600 */
+        --border: #1f2937; /* gray-800 */
+        --hover: #0b1327; /* sidebar hover */
+        --link: #60a5fa; /* blue-400 */
+      }
+
+      /* Global reset */
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        height: 100%;
+      }
+      body {
+        margin: 0;
+        font: 15px/1.5 system-ui, -apple-system, Segoe UI, Roboto, Ubuntu,
+          Cantarell, Noto Sans, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+        color: var(--text);
+        background: radial-gradient(
+          1200px 800px at 10% 0%,
+          #0b1020 0%,
+          var(--bg) 45%,
+          #0a0f1d 100%
+        );
+      }
+
+      /* Layout */
+      .app {
+        display: grid;
+        grid-template-columns: 280px 1fr;
+        min-height: 100vh;
+      }
+
+      /* Sidebar */
+      .sidebar {
+        background: linear-gradient(180deg, var(--panel-2), #0a1223);
+        border-right: 1px solid var(--border);
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        padding: 18px 12px;
+        overflow: auto;
+      }
+
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 700;
+        letter-spacing: 0.3px;
+        margin: 4px 6px 16px;
+      }
+      .logo .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--brand), var(--brand-2));
+        box-shadow: 0 0 14px rgba(34, 197, 94, 0.45);
+      }
+
+      .hint {
+        color: var(--muted);
+        font-size: 12px;
+        margin: 0 8px 12px;
+      }
+
+      .company-list {
+        display: grid;
+        gap: 6px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .company-label {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 12px;
+        border-radius: 12px;
+        cursor: pointer;
+        background: transparent;
+        border: 1px solid transparent;
+        color: var(--text);
+        text-decoration: none;
+        transition: 0.18s ease;
+      }
+      .company-label:hover {
+        background: var(--hover);
+        border-color: var(--border);
+      }
+
+      .company-label .badge {
+        flex: 0 0 auto;
+        width: 9px;
+        height: 9px;
+        border-radius: 999px;
+        background: #334155;
+        border: 1px solid #1f2937;
+      }
+
+      /* Radio tabs (companies) */
+      input[type="radio"] {
+        display: none;
+      }
+
+      /* Content area */
+      .content {
+        padding: 28px min(6vw, 48px);
+      }
+
+      header h1 {
+        margin: 0 0 2px;
+        font-size: clamp(18px, 2.4vw, 24px);
+      }
+      header p {
+        margin: 0 0 18px;
+        color: var(--muted);
+      }
+
+      .grid {
+        display: grid;
+        gap: 16px;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      }
+
+      .card {
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.02),
+          rgba(255, 255, 255, 0)
+        );
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 14px;
+        display: grid;
+        gap: 10px;
+        min-height: 120px;
+        transition: border-color 0.2s ease, transform 0.08s ease;
+      }
+      .card:hover {
+        border-color: #2a3a55;
+        transform: translateY(-1px);
+      }
+
+      .card h3 {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 700;
+        letter-spacing: 0.2px;
+      }
+      .links {
+        display: grid;
+        gap: 8px;
+      }
+      .link a {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 10px;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        text-decoration: none;
+        color: var(--text);
+        font-weight: 600;
+        font-size: 14px;
+        background: #0b1324;
+        transition: 0.15s ease;
+      }
+      .link a:hover {
+        border-color: var(--brand);
+        box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.12);
+      }
+      .link small {
+        color: var(--muted);
+        font-weight: 500;
+      }
+
+      .pane {
+        display: none;
+      }
+
+      /* Show a pane when its radio is checked */
+      #c1:checked ~ .content #pane-1,
+      #c2:checked ~ .content #pane-2,
+      #c3:checked ~ .content #pane-3,
+      #c4:checked ~ .content #pane-4 {
+        display: block;
+      }
+
+      /* Active company highlight */
+      #c1:checked ~ .sidebar label[for="c1"],
+      #c2:checked ~ .sidebar label[for="c2"],
+      #c3:checked ~ .sidebar label[for="c3"],
+      #c4:checked ~ .sidebar label[for="c4"] {
+        background: linear-gradient(
+          180deg,
+          rgba(34, 197, 94, 0.08),
+          rgba(34, 197, 94, 0.02)
+        );
+        border-color: rgba(34, 197, 94, 0.45);
+      }
+      #c1:checked ~ .sidebar label[for="c1"] .badge,
+      #c2:checked ~ .sidebar label[for="c2"] .badge,
+      #c3:checked ~ .sidebar label[for="c3"] .badge,
+      #c4:checked ~ .sidebar label[for="c4"] .badge {
+        background: linear-gradient(135deg, var(--brand), var(--brand-2));
+        box-shadow: 0 0 10px rgba(34, 197, 94, 0.55);
+      }
+
+      /* Footer */
+      footer {
+        margin-top: 24px;
+        color: var(--muted);
+        font-size: 12px;
+        text-align: center;
+      }
+
+      /* Responsive: narrow screens -> sidebar on top */
+      @media (max-width: 860px) {
+        .app {
+          grid-template-columns: 1fr;
+        }
+        .sidebar {
+          position: static;
+          height: auto;
+        }
+        .company-list {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!--
+    КАК ПОЛЬЗОВАТЬСЯ
+    1) В сайдбаре ниже замените названия компаний.
+    2) В каждом блоке .pane (справа) замените ссылки на ваши Google Sheets.
+    3) Чтобы добавить новую компанию: 
+       - продублируйте input#cX, label[for=cX] и .pane с таким же индексом.
+       - в CSS добавьте две строки показа/подсветки по аналогии с c4.
+  -->
+
+    <div class="app">
+      <!-- Радиокнопки для переключения вкладок компаний (без JS) -->
+      <input type="radio" name="company" id="c1" checked />
+      <input type="radio" name="company" id="c2" />
+      <input type="radio" name="company" id="c3" />
+      <input type="radio" name="company" id="c4" />
+
+      <!-- Sidebar: список компаний -->
+      <aside class="sidebar">
+        <div class="logo"><span class="dot"></span> Наши ссылки</div>
+        <p class="hint">Выберите компанию слева — справа появятся её ссылки.</p>
+        <ul class="company-list">
+          <li>
+            <label for="c1" class="company-label"
+              ><span class="badge"></span> ООО «Safar Time»</label
+            >
+          </li>
+          <li>
+            <label for="c2" class="company-label"
+              ><span class="badge"></span> OOO «All Avia»</label
+            >
+          </li>
+          <hr
+            style="border: none; height: 2px; background: #ccc; margin: 20px 0"
+          />
+          <li>
+            <label for="c3" class="company-label"
+              ><span class="badge"></span>Общие ссылки</label
+            >
+          </li>
+
+          <!-- <li>
+            <label for="c4" class="company-label"
+              ><span class="badge"></span> ОOО «TASS Solutions»</label
+            >
+          </li> -->
+        </ul>
+      </aside>
+
+      <!-- Content: панель ссылок для выбранной компании -->
+      <main class="content">
+        <header>
+          <h1>Ссылки на документы Google Sheets и онлайн ресурсы</h1>
+          <p>
+            Все ссылки открываются в новой вкладке. <br> Для добавления разделов и обновления ссылок звонить по номеру +998 91 588-55-28
+          </p>
+        </header>
+
+        <!-- Компания 1 -->
+        <section class="pane" id="pane-1">
+          <div class="grid">
+            <article class="card">
+              <h3>Касса</h3>
+              <div class="links">
+                <div class="link">
+                  <a
+                    href="https://docs.google.com/spreadsheets/d/1PHNOcRIGHvDmJEjx9B3WiQfWy30e3O_DlECUU2sx8L8/edit?gid=287730491#gid=287730491"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >Март - Июнь · <small>ежедневный отчёт</small></a
+                  >
+                </div>
+                <div class="link">
+                  <a
+                    href="https://docs.google.com/spreadsheets/d/1IQoNgwT8BJjkOKFirqo4IKj9aDjYZ4-p-2QEYFoEDN4/edit?gid=0#gid=0"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >Июль · <small>ежедневный отчёт</small></a
+                  >
+                </div>
+                <div class="link">
+                  <a
+                    href="https://docs.google.com/spreadsheets/d/1OEzAmGhoBES5zpQTDbu3TF-H_ZLYNZK2rOzhUPp5YjQ/edit?gid=1605429796#gid=1605429796"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >Август · <small>ежедневный отчёт</small></a
+                  >
+                </div>
+              </div>
+            </article>
+            <article class="card">
+              <h3>Зарплата</h3>
+              <div class="links">
+                <div class="link">
+                  <a
+                    href="https://docs.google.com/spreadsheets/d/1mpehOfvosmvVkKh5wzH7A3ym0a8bi31y1B6l2pTc1t4/edit?gid=167727271#gid=167727271"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >Зарплата · <small>реестр выплат</small></a
+                  >
+                </div>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <!-- Компания 2 -->
+        <section class="pane" id="pane-2">
+          <div class="grid">
+            <article class="card">
+              <h3>Заказчики</h3>
+              <div class="links">
+                <div class="link">
+                  <a
+                    href="https://docs.google.com/spreadsheets/d/1bqBKjRH36tlvs6DaMjEmEbE1LHFnX6tPYJoTwzcHBtU/edit"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >Июнь · <small>ежемесячный отчёт</small></a
+                  >
+                </div>
+
+                <div class="link">
+                  <a
+                    href="https://docs.google.com/spreadsheets/d/1bqBKjRH36tlvs6DaMjEmEbE1LHFnX6tPYJoTwzcHBtU/edit"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >Июль · <small>ежемесячный отчёт</small></a
+                  >
+                </div>
+                <div class="link">
+                  <a
+                    href="https://docs.google.com/spreadsheets/d/17yBH3_smZFbPq8BiLFspu-wHaREECdPN/edit?gid=39086939#gid=39086939"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >Август · <small>ежемесячный отчёт</small></a
+                  >
+                </div>
+              </div>
+            </article>
+            <article class="card">
+              <h3>Товары</h3>
+              <div class="links">
+                <div class="link">
+                  <a
+                    href="https://docs.google.com/spreadsheets/d/1D6npdxW-nTWPbgri-g_yAIUTWvcgDWBLXgKigRTo4vA/edit?gid=1251791275#gid=1251791275"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >Июнь · <small>загрузка ВС</small></a
+                  >
+                </div>
+                <div class="link">
+                  <a
+                    href="https://docs.google.com/spreadsheets/d/1K0z2Fyhx4QL2wORXr5HYied8hR-fowM9oCxbSEzh2Jk/edit?gid=1251791275#gid=1251791275"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >Июль · <small>обслуживание ВС</small></a
+                  >
+                </div>
+                <div class="link">
+                  <a
+                    href="https://docs.google.com/spreadsheets/d/1dM6ia0XTM7QYo6AfpeKgq66mn1DWJJmQkqYMLzyomf0/edit?gid=1251791275#gid=1251791275"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >Август · <small>обслуживание ВС</small></a
+                  >
+                </div>
+              </div>
+            </article>
+            <article class="card">
+              <h3>Уборка</h3>
+              <div class="links">
+                <div class="link">
+                  <a
+                    href="https://docs.google.com/spreadsheets/d/1GnDiqX_VPNqM2A002NqlpOANDXt84VlL0c6feM-CSZQ/edit?gid=1250234435#gid=1250234435"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >Июнь · <small>загрузка ВС</small></a
+                  >
+                </div>
+                <div class="link">
+                  <a
+                    href="https://docs.google.com/spreadsheets/d/1t_3NiKYEUYfnkjIV7idn-jp1kJ7PPgA7dllll5HbIBA/edit?gid=1250234435#gid=1250234435"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >Июль · <small>обслуживание ВС</small></a
+                  >
+                </div>
+                <div class="link">
+                  <a
+                    href="https://docs.google.com/spreadsheets/d/190VbvkG2xtL3EoCejZjtxBs8aBELL6jhR5WS2q9We_g/edit?gid=2083972006#gid=2083972006"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >Август · <small>обслуживание ВС</small></a
+                  >
+                </div>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <!-- Компания 3 -->
+        <section class="pane" id="pane-3">
+          <div class="grid">
+            <article class="card">
+              <h3>Налоги</h3>
+              <div class="links">
+                <div class="link">
+                  <a
+                    href="https://my.soliq.uz"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >Старый сайт · <small>my.soliq.uz</small></a
+                  >
+                </div>
+                <div class="link">
+                  <a
+                    href="https://my3.soliq.uz"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >Новый сайт · <small>my3.soliq.uz</small></a
+                  >
+                </div>
+              </div>
+            </article>
+            <article class="card">
+              <h3>Зарплата</h3>
+              <div class="links">
+                <div class="link">
+                  <a
+                    href="https://nps.xb.uz/nps/auth.fb"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >Халк банк · <small>сдача ИНПС</small></a
+                  >
+                </div>
+              </div>
+            </article>
+            <article class="card">
+              <h3>Эл. документы</h3>
+              <div class="links">
+                <div class="link">
+                  <a
+                    href="https://didox.uz"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >Счета Фактур · <small>didox.uz</small></a
+                  >
+                </div>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <!-- Компания 4 -->
+        <section class="pane" id="pane-4">
+          <div class="grid">
+            <article class="card">
+              <h3>Отдел проектов</h3>
+              <div class="links">
+                <div class="link">
+                  <a
+                    href="https://docs.google.com/spreadsheets/d/AAAAAAA1"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >Проекты · <small>доска</small></a
+                  >
+                </div>
+                <div class="link">
+                  <a
+                    href="https://docs.google.com/spreadsheets/d/AAAAAAA2"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >Задачи · <small>backlog</small></a
+                  >
+                </div>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <footer>Тестовый режим.</footer>
+      </main>
+    </div>
+  </body>
+</html>
