@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
   <head>
     <meta charset="utf-8" />
@@ -28,8 +28,17 @@
       }
       body {
         margin: 0;
-        font: 15px/1.5 system-ui, -apple-system, Segoe UI, Roboto, Ubuntu,
-          Cantarell, Noto Sans, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+        font:
+          15px/1.5 system-ui,
+          -apple-system,
+          Segoe UI,
+          Roboto,
+          Ubuntu,
+          Cantarell,
+          Noto Sans,
+          Arial,
+          "Apple Color Emoji",
+          "Segoe UI Emoji";
         color: var(--text);
         background: radial-gradient(
           1200px 800px at 10% 0%,
@@ -159,7 +168,9 @@
         display: grid;
         gap: 10px;
         min-height: 120px;
-        transition: border-color 0.2s ease, transform 0.08s ease;
+        transition:
+          border-color 0.2s ease,
+          transform 0.08s ease;
       }
       .card:hover {
         border-color: #2a3a55;
@@ -310,8 +321,33 @@
             >
           </li>
         </ul>
+        <hr />
 
-                <!-- ======||||||====== -->
+        <div
+          id="support-widget"
+          style="
+            padding: 20px 0;
+            margin-top: 10px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+          "
+        >
+          <p
+            id="compliment-text"
+            style="
+              color: #fff;
+              font-size: 18px;
+              line-height: 1.4;
+              transition: opacity 0.5s ease-in-out;
+              min-height: 40px;
+              margin: 0;
+              margin-left: 20px;
+            "
+          >
+            <!-- Сюда подставится первая фраза -->
+          </p>
+        </div>
+
+        <!-- ======||||||====== -->
 
         <!-- <div>
           <h1 class="main_text">Надежда, с днём рождения! 🎉</h1>
@@ -324,28 +360,6 @@
         </div> -->
 
         <!-- ======||||||====== -->
-
-        <!-- <div>
-          <h1 class="main_text">Коллеги!</h1>
-          <p class="second_text">
-            Документы за 2025 год будут отправлены в архив.
-            Архив доступен по ссылке в Общих ссылках.
-            В архиве документы кассы, товаров, уборки, сф Jetex за 2025 год.<br>
-            Для замены документов на 2026 год обращайтесь ко мне. <br>
-            Пока ничего лучше архива не придумал. Предложения приветствуются.<br>
-            <br>
-            Пожалуйста, сообщите о неработающих ссылках.
-          </p>
-          <p class="third_text">Азим.</p>
-        </div> -->
-
-        <hr />
-        <!-- Elfsight Comments | Untitled Comments -->
-        <!-- <script src="https://elfsightcdn.com/platform.js" async></script>
-        <div
-          class="elfsight-app-2278608a-46e5-48f5-8d66-addc760631f0"
-          data-elfsight-app-lazy
-        ></div> -->
       </aside>
 
       <!-- Content: панель ссылок для выбранной компании -->
@@ -503,14 +517,15 @@
                 </div>
                 <div class="link">
                   <a
-                  href="https://docs.google.com/spreadsheets/d/1ocqkD-PCVmXCOdYBGxkr3c2A6EXmOJwHJdKsW8LqhKw/edit?gid=1201205355#gid=1201205355"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  >Расчёт доходов 2026 · <small>реестр выплат</small></a
+                    href="https://docs.google.com/spreadsheets/d/1ocqkD-PCVmXCOdYBGxkr3c2A6EXmOJwHJdKsW8LqhKw/edit?gid=1201205355#gid=1201205355"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >Расчёт доходов 2026 · <small>реестр выплат</small></a
                   >
                 </div>
                 <div class="link">
-                  <a style="color: grey;"
+                  <a
+                    style="color: grey"
                     href="https://docs.google.com/spreadsheets/d/1mli7ApmaZY8g77gh5jx2eHF0C5gkJf4uahRwHAX27FQ/edit?gid=1786824463#gid=1786824463"
                     target="_blank"
                     rel="noopener noreferrer"
@@ -733,7 +748,7 @@
                 </div>
               </div>
             </article>
-            
+
             <article class="card">
               <h3>Годовые таблицы</h3>
               <div class="links">
@@ -793,7 +808,8 @@
                     target="_blank"
                     rel="noopener noreferrer"
                     >Папка для ексель таблиц</a
-                  > <br>
+                  >
+                  <br />
                   <small>скадывайте сюда таблицы ексель для архива</small>
                 </div>
               </div>
@@ -887,3 +903,58 @@
     </div>
   </body>
 </html>
+
+<script>
+  const compliments = [
+    "Твоя внимательность к деталям — это суперсила. ✨",
+    "Сегодня отличный день, чтобы позволить себе паузу на кофе. ☕",
+    "Ты — причина, по которой в этом офисе так уютно. 🌸",
+    "С твоим профессионализмом любые дедлайны по плечу! 💪",
+    "Твоя улыбка — лучший антистресс для всего отдела. 😊",
+    "Ты сегодня выглядишь потрясающе, просто знай это. ✨",
+    "Твои идеи делают нашу работу круче. Продолжай в том же духе! 🚀",
+    "Твой вклад в проект неоценим, мы это очень ценим. 🙌",
+    "Сегодня именно тот день, когда у тебя всё получится. ☀️",
+    "Ты — душа этого коллектива. Спасибо, что ты с нами! 💖",
+    "Твой профессионализм — это то, на чем держится наш отдел. 💼",
+    "Твоя организованность — это уровень «Бог». 📈",
+    "Ты умеешь находить доброе слово для каждого, это талант. 🕊️",
+    "Твой оптимизм — это именно то, что нам сегодня нужно. 🌟",
+    "Рядом с тобой даже хмурый понедельник становится светлее. ☀️",
+    "Ты потрясающая, просто помни об этом в течение дня. 💖",
+    "Твой рабочий стол — самый уютный уголок в этом офисе. 🌿",
+    "Пусть этот рабочий день пролетит легко и незаметно. ✨",
+    "Помни: работа — это временно, а твоя красота — вечна. 🌸",
+    "Ты сегодня работаешь на все 100%, не забудь похвалить себя! 🙌",
+    "Самое время глубоко выдохнуть и улыбнуться своим мыслям. 😊",
+    "Пусть все задачи сегодня решаются сами собой. ✨",
+    "Ты заслуживаешь самого прекрасного вечера после работы. 🥂",
+    "Твоя энергия заряжает весь офис на успех! ⚡",
+    "Твое чувство стиля делает наш офис капельку моднее. 👗",
+    "Любая сложная задача пасует перед твоим спокойствием. 💪",
+    "Ты — настоящий эксперт, на которого хочется равняться. 🎓",
+    "Спасибо за твою ответственность, с тобой очень надежно. 🤝",
+    "Сияй сегодня! ✨",
+    "Ты всё сможешь. Гордимся, что ты в нашей команде! ❤️",
+  ];
+
+  const textElement = document.getElementById("compliment-text");
+
+  function updateCompliment() {
+    // Эффект плавного исчезновения
+    textElement.style.opacity = 0;
+
+    setTimeout(() => {
+      const randomIndex = Math.floor(Math.random() * compliments.length);
+      textElement.innerText = compliments[randomIndex];
+      // Эффект плавного появления
+      textElement.style.opacity = 1;
+    }, 500); // Половина секунды на смену текста
+  }
+
+  // Запуск при загрузке
+  updateCompliment();
+
+  // Интервал 3 минуты (180 000 миллисекунд)
+  setInterval(updateCompliment, 60000);
+</script>
