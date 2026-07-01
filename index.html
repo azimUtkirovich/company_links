@@ -4,312 +4,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Наши ссылки — Google Sheets</title>
-    <style>
-      :root {
-        --bg: #0f172a; /* slate-900 */
-        --panel: #111827; /* gray-900 */
-        --panel-2: #0b1222; /* darker */
-        --text: #e5e7eb; /* gray-200 */
-        --muted: #9ca3af; /* gray-400 */
-        --brand: #22c55e; /* green-500 */
-        --brand-2: #16a34a; /* green-600 */
-        --border: #1f2937; /* gray-800 */
-        --hover: #0b1327; /* sidebar hover */
-        --link: #60a5fa; /* blue-400 */
-      }
-
-      /* Global reset */
-      * {
-        box-sizing: border-box;
-      }
-      html,
-      body {
-        height: 100%;
-      }
-      body {
-        margin: 0;
-        font:
-          15px/1.5 system-ui,
-          -apple-system,
-          Segoe UI,
-          Roboto,
-          Ubuntu,
-          Cantarell,
-          Noto Sans,
-          Arial,
-          "Apple Color Emoji",
-          "Segoe UI Emoji";
-        color: var(--text);
-        background: radial-gradient(
-          1200px 800px at 10% 0%,
-          #0b1020 0%,
-          var(--bg) 45%,
-          #0a0f1d 100%
-        );
-      }
-
-      /* Layout */
-      .app {
-        display: grid;
-        grid-template-columns: 400px 1fr; /*280*/
-        min-height: 100vh;
-      }
-
-      /* Sidebar */
-      .sidebar {
-        background: linear-gradient(180deg, var(--panel-2), #0a1223);
-        border-right: 1px solid var(--border);
-        position: sticky;
-        top: 0;
-        height: 100vh;
-        padding: 18px 12px;
-        overflow: auto;
-      }
-
-      /*.content {
-        background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.3)),
-          url("https://pichold.ru/wp-content/uploads/2021/04/eCCaD3pVxJ.gif");
-        background-repeat: no-repeat;
-        background-size: cover;
-        border-radius: 20px;
-      }*/
-
-      .logo {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        font-weight: 700;
-        letter-spacing: 0.3px;
-        margin: 4px 6px 16px;
-      }
-      .logo .dot {
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        background: linear-gradient(135deg, var(--brand), var(--brand-2));
-        box-shadow: 0 0 14px rgba(34, 197, 94, 0.45);
-      }
-
-      .hint {
-        color: var(--muted);
-        font-size: 12px;
-        margin: 0 8px 12px;
-      }
-
-      .company-list {
-        display: grid;
-        gap: 6px;
-        margin: 0;
-        padding: 0;
-        list-style: none;
-      }
-
-      .company-label {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        padding: 10px 12px;
-        border-radius: 12px;
-        cursor: pointer;
-        background: transparent;
-        border: 1px solid transparent;
-        color: var(--text);
-        text-decoration: none;
-        transition: 0.18s ease;
-      }
-      .company-label:hover {
-        background: var(--hover);
-        border-color: var(--border);
-      }
-
-      .company-label .badge {
-        flex: 0 0 auto;
-        width: 9px;
-        height: 9px;
-        border-radius: 999px;
-        background: #334155;
-        border: 1px solid #1f2937;
-      }
-
-      /* Radio tabs (companies) */
-      input[type="radio"] {
-        display: none;
-      }
-
-      /* Content area */
-      .content {
-        padding: 28px min(6vw, 48px);
-      }
-
-      header h1 {
-        margin: 0 0 2px;
-        font-size: clamp(18px, 2.4vw, 24px);
-      }
-      header p {
-        margin: 0 0 18px;
-        color: var(--muted);
-      }
-
-      .grid {
-        display: grid;
-        gap: 16px;
-        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-      }
-
-      .card {
-        background: linear-gradient(
-          180deg,
-          rgba(255, 255, 255, 0.02),
-          rgba(255, 255, 255, 0)
-        );
-        border: 1px solid var(--border);
-        border-radius: 16px;
-        padding: 14px;
-        display: grid;
-        gap: 10px;
-        min-height: 120px;
-        transition:
-          border-color 0.2s ease,
-          transform 0.08s ease;
-      }
-      .card:hover {
-        border-color: #2a3a55;
-        transform: translateY(-1px);
-      }
-
-      .card h3 {
-        margin: 0;
-        font-size: 16px;
-        font-weight: 700;
-        letter-spacing: 0.2px;
-      }
-      .links {
-        display: grid;
-        gap: 8px;
-      }
-      .link a {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        padding: 8px 10px;
-        border: 1px solid var(--border);
-        border-radius: 12px;
-        text-decoration: none;
-        color: var(--text);
-        font-weight: 600;
-        font-size: 14px;
-        background: #0b1324;
-        transition: 0.15s ease;
-      }
-      .link a:hover {
-        border-color: var(--brand);
-        box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.12);
-      }
-      .link small {
-        color: var(--muted);
-        font-weight: 500;
-      }
-
-      .pane {
-        display: none;
-      }
-
-      /* Show a pane when its radio is checked */
-      #c1:checked ~ .content #pane-1,
-      #c2:checked ~ .content #pane-2,
-      #c3:checked ~ .content #pane-3,
-      #c4:checked ~ .content #pane-4 {
-        display: block;
-      }
-
-      /* Active company highlight */
-      #c1:checked ~ .sidebar label[for="c1"],
-      #c2:checked ~ .sidebar label[for="c2"],
-      #c3:checked ~ .sidebar label[for="c3"],
-      #c4:checked ~ .sidebar label[for="c4"] {
-        background: linear-gradient(
-          180deg,
-          rgba(34, 197, 94, 0.08),
-          rgba(34, 197, 94, 0.02)
-        );
-        border-color: rgba(34, 197, 94, 0.45);
-      }
-      #c1:checked ~ .sidebar label[for="c1"] .badge,
-      #c2:checked ~ .sidebar label[for="c2"] .badge,
-      #c3:checked ~ .sidebar label[for="c3"] .badge,
-      #c4:checked ~ .sidebar label[for="c4"] .badge {
-        background: linear-gradient(135deg, var(--brand), var(--brand-2));
-        box-shadow: 0 0 10px rgba(34, 197, 94, 0.55);
-      }
-
-      /* Footer */
-      footer {
-        margin-top: 24px;
-        color: var(--muted);
-        font-size: 12px;
-        text-align: center;
-      }
-
-      /* Responsive: narrow screens -> sidebar on top */
-      @media (max-width: 860px) {
-        .app {
-          grid-template-columns: 1fr;
-        }
-        .sidebar {
-          position: static;
-          height: auto;
-        }
-        .company-list {
-          grid-template-columns: repeat(2, minmax(0, 1fr));
-        }
-      }
-
-      /* ======================== */
-
-      /* ======================== */
-      .main_text,
-      .second_text span {
-        color: rgb(113, 241, 113);
-      }
-      .second_text span {
-        text-transform: uppercase;
-        font-weight: 700;
-      }
-      .third_text {
-        font-weight: 900;
-      }
-      .ifrs-container {
-        display: flex;
-        align-items: center;
-        gap: 50px;
-        width: 100%;
-        margin: 0 auto;
-      }
-      .ifrs-container button,
-      .ifrs-container a {
-        text-decoration: none;
-        width: 200px;
-        height: 30px;
-        background: #0a0f1d;
-        border-radius: 10px;
-        border-color: #2a3a55;
-        cursor: pointer;
-        color: #e5e7eb;
-      }
-    </style>
+    <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <!--
-    КАК ПОЛЬЗОВАТЬСЯ
-    1) В сайдбаре ниже замените названия компаний.
-    2) В каждом блоке .pane (справа) замените ссылки на ваши Google Sheets.
-    3) Чтобы добавить новую компанию: 
-       - продублируйте input#cX, label[for=cX] и .pane с таким же индексом.
-       - в CSS добавьте две строки показа/подсветки по аналогии с c4.
-  -->
-
     <div class="app">
-      <!-- Радиокнопки для переключения вкладок компаний (без JS) -->
+      <!-- Радиокнопки -->
       <input type="radio" name="company" id="c1" checked />
       <input type="radio" name="company" id="c2" />
       <input type="radio" name="company" id="c3" />
@@ -363,7 +62,7 @@
               margin-left: 20px;
             "
           >
-            <!-- Сюда подставится первая фраза -->
+            <!-- TEXT -->
           </p>
         </div>
         <div class="ifrs-container">
@@ -393,7 +92,7 @@
               margin-left: 20px;
             "
           >
-            <!-- Сюда подставится первая фраза -->
+            <!-- TEXT -->
           </p>
         </div>
         <div class="ifrs-container">
@@ -599,6 +298,14 @@
                     >Апрель <small>ежемесячная книга</small></a
                   >
                 </div>
+                <div class="link">
+                  <a
+                    href="https://docs.google.com/spreadsheets/d/1k2dByZ02ytpQ56cze59_vwZSRl55_GFpQRO88g7m4xw/edit?usp=drive_link"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >Май <small>ежемесячная книга</small></a
+                  >
+                </div>
               </div>
             </article>
             <article class="card">
@@ -642,6 +349,14 @@
                     target="_blank"
                     rel="noopener noreferrer"
                     >Май <small>ежемесячная книга</small></a
+                  >
+                </div>
+                <div class="link">
+                  <a
+                    href="https://docs.google.com/spreadsheets/d/1PoCwAwL83wpEHs7TotH_RvfwCLbEljls1AJQxYar2WU/edit?usp=sharing"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >Июнь <small>ежемесячная книга</small></a
                   >
                 </div>
               </div>
@@ -1004,135 +719,5 @@
       </main>
     </div>
   </body>
+  <script src="script.js"></script>
 </html>
-
-<script>
-  const ifrsSnippets = [
-    "МСФО (IAS) 16: Объект ОС признаётся, если есть вероятность притока будущих экономических выгод. 🏗️",
-    "МСФО (IFRS) 15: Выручка признается, когда контроль над активом переходит к покупателю. 📦",
-    "МСФО (IAS) 38: Затраты на исследования — всегда в расход, на разработку — можно в актив. 🧪",
-    "Концептуальные основы: Актив — это ресурс, контролируемый компанией в результате прошлых событий. 💼",
-    "МСФО (IFRS) 9: Финансовые активы оцениваются по амортизированной или по справедливой стоимости. 📉",
-    "МСФО (IAS) 2: Запасы оцениваются по наименьшей из двух величин: себестоимости или чистой цене продажи. 🍎",
-    "МСФО (IAS) 37: Резерв признается только при наличии юридического или фактического обязательства. ⚖️",
-    "МСФО (IFRS) 16: Арендатор признает актив в форме права пользования и арендное обязательство. 🔑",
-    "МСФО (IAS) 8: Изменение учетной политики ретроспективно, а оценочных значений — перспективно. 📅",
-    "МСФО (IAS) 10: События после отчетной даты бывают корректирующие и некорректирующие. 📝",
-    "Качественные характеристики: Уместность и Правдивое представление — фундаментальные свойства инфо. ✨",
-    "МСФО (IAS) 1: Полный комплект отчетности включает 5 форм и пояснительные примечания. 📚",
-    "МСФО (IAS) 21: Курсовые разницы по монетарным статьям признаются в прибыли или убытке. 💱",
-    "МСФО (IFRS) 13: Справедливая стоимость — цена выхода на основном или наиболее выгодном рынке. 🏛️",
-    "МСФО (IAS) 36: Убыток от обесценения = Балансовая стоимость минус Возмещаемая сумма. 📉",
-    "МСФО (IAS) 12: Отложенный налог возникает из-за временных разниц между балансовой и налоговой стоимостью. 📊",
-    "МСФО (IAS) 16: Компоненты ОС с разным сроком службы амортизируются отдельно. ⚙️",
-    "МСФО (IFRS) 3: Гудвил не амортизируется, но ежегодно тестируется на обесценение. 🤝",
-    "МСФО (IAS) 23: Затраты по займам капитализируются, если актив является квалифицируемым. 💰",
-    "МСФО (IAS) 36: Возмещаемая сумма — это большее из ценности использования и справедливой стоимости за вычетом затрат на продажу. ⚖️",
-    "МСФО (IAS) 7: Денежные потоки делятся на три вида: операционные, инвестиционные и финансовые. 🌊",
-    "МСФО (IFRS) 10: Контроль над объектом инвестиций — это право на доход и возможность на него влиять. 🎮",
-    "МСФО (IAS) 19: Краткосрочные вознаграждения работникам признаются в периоде, когда работа была выполнена. 👷",
-    "МСФО (IAS) 40: Инвестиционная недвижимость удерживается для получения аренды или прироста стоимости. 🏢",
-    "МСФО (IFRS) 5: Внеоборотные активы, предназначенные для продажи, оцениваются по наименьшей из балансовой и справедливой за вычетом затрат на продажу. 🏷️",
-    "МСФО (IAS) 33: Базовая прибыль на акцию считается только по обыкновенным акциям в обращении. 📈",
-    "МСФО (IFRS) 15: Шаг 2 — Идентификация обязанностей к исполнению в рамках договора. 📑",
-    "МСФО (IAS) 20: Правительственные субсидии признаются только при обоснованной уверенности в их получении. 🏛️",
-    "МСФО (IFRS) 13: Уровень 1 иерархии справедливой стоимости — это котируемые цены на активных рынках. 🥇",
-    "МСФО (IAS) 28: Метод участия используется для учета инвестиций в ассоциированные организации. 🤝",
-  ];
-
-  const nsbuSnippets = [
-  "НСБУ №5: Основные средства — активы стоимостью более 50 БРВ (или лимита УП) и сроком службы > 1 года. 🏗️",
-  "НСБУ №21: Счет 0100 — Основные средства, Счет 0200 — Износ основных средств. ⚙️",
-  "Проводка (Узб): Приобретение материалов — Дт 1010 Кт 6010. 📦",
-  "НСБУ №4: ТМЗ оцениваются по методам ФИФО или средневзвешенной стоимости. 🍎",
-  "Проводка (Узб): Начислена зарплата персоналу — Дт 2010 (9420) Кт 6710. 👷‍♂️",
-  "НСБУ №21: Доходы от основной деятельности учитываются на счетах группы 9000. 💰",
-  "Проводка (Узб): Отражение выручки от реализации товаров — Дт 4010 Кт 9020. 🏷️",
-  "НСБУ №22: Ошибки прошлых лет исправляются путем корректировки сальдо нераспределенной прибыли (счет 8710). 🛠️",
-  "Проводка (Узб): Начислен НДС с реализации — Дт 9000 Кт 6410 (НДС). 💸",
-  "НСБУ №7: Нематериальные активы (счет 0400) амортизируются методом прямолинейного начисления. 💻",
-  "Проводка (Узб): Списание себестоимости реализованной продукции — Дт 9110 Кт 2810. 🏭",
-  "НСБУ №14: Собственный капитал включает уставный, добавленный, резервный капитал и нераспределенную прибыль. 💎",
-  "Проводка (Узб): Выделение финансовой помощи от учредителя — Дт 5110 Кт 6610 (или 8800). 🏛️",
-  "НСБУ №11: Затраты на производство делятся на прямые и косвенные. 📊",
-  "Проводка (Узб): Перечисление налогов в бюджет — Дт 6410 Кт 5110. 🏦",
-  "НСБУ №9: Инвентаризация обязательна при смене материально-ответственных лиц. 🔍",
-  "Проводка (Узб): Излишки ТМЗ, выявленные при проверке — Дт 1010 Кт 9310. 📈",
-  "НСБУ №19: Расходы будущих периодов (счет 3100) списываются согласно сроку их возникновения. ⏳",
-  "Проводка (Узб): Погашение кредита банка — Дт 6810 Кт 5110. 📉",
-  "НСБУ №2: Доходы и расходы по курсовой разнице отражаются на счетах 9540 и 9620. 💱",
-  "НСБУ №5: Основные средства (0100) — активы со сроком службы более года и стоимостью выше лимита. 🏗️",
-  "Проводка: Начисление износа ОС — Дт 9400 (или 2000) Кт 0200. ⚙️",
-  "Счет 1000: Учет материалов. Поступление — Дт 1000 Кт 6000. Списание в производство — Дт 2000 Кт 1000. 📦",
-  "Счет 2000: Основное производство. Сюда собираются прямые затраты: материалы, зарплата и налоги. 🏭",
-  "Счет 4000: Дебиторская задолженность покупателей. Увеличение по дебету означает отгрузку. 👤",
-  "Счет 4200: Авансы персоналу. Отражают задолженность сотрудников перед компанией (например, подотчет). 💳",
-  "Счет 4300: Авансы, выданные поставщикам. Наша предоплата за будущие товары или услуги. 💸",
-  "Счет 4400: Авансовые платежи по налогам. Отражают переплату или авансы в бюджет до конца периода. 🏛️",
-  "Счет 5100: Расчетный счет (сум). Поступление выручки от покупателей — Дт 5100 Кт 4000. 🏦",
-  "Счет 5200: Валютный счет. Обязательна переоценка остатков на дату отчетности или совершения операции. 💱",
-  "Счет 5700: Денежные средства в пути. Используется, когда деньги списаны со счета, но еще не зачислены (инкассация). 🚚",
-  "Счет 6000: Кредиторская задолженность перед поставщиками. Увеличивается по кредиту при получении услуг. 🤝",
-  "Счет 6300: Авансы полученные. Наша обязанность перед клиентом. Отражается в пассиве баланса. 📥",
-  "Счет 6400: Задолженность по налогам. Начисление — Кт 6400, фактическая оплата — Дт 6400. 🏛️",
-  "Счет 6700: Расчеты по оплате труда. Кредитовое сальдо показывает долг компании перед работниками. 👷‍♂️",
-  "Счет 6900: Расчеты с прочими кредиторами. Используется для обязательств, не связанных с основной деятельностью. 📑",
-  "Счет 8300: Уставный капитал. Должен соответствовать сумме в учредительных документах. 💎",
-  "Счет 8710: Нераспределенная прибыль. Конечный результат деятельности за предыдущие годы. 📈",
-  "Счет 9000: Доходы от реализации. Закрываются в конце месяца на финансовый результат — Дт 9000 Кт 9910. 🏁",
-  "Счет 9100: Себестоимость реализованной продукции. Учитывает затраты, непосредственно связанные с выручкой. 📉",
-  "Счет 9400: Общехозяйственные расходы. Расходы на управление, которые не включаются в производственную себестоимость. 💼",
-  "Счет 9600: Расходы от финансовой деятельности (например, отрицательная курсовая разница или проценты). 📉",
-  "Счет 9910: Конечный финансовый результат. Сальдо по дебету — убыток, по кредиту — прибыль. ⚖️",
-  "Счет 014: Забалансовый учет ТМЗ в эксплуатации. Контроль сохранности инвентаря после списания на расходы. 🔨"
-];
-
-  const textElements = {
-  msfo: { 
-    el: document.getElementById("compliment-text"), 
-    data: ifrsSnippets, 
-    last: -1 
-  },
-  nsbu: { 
-    el: document.getElementById("nsbu-text"), // Теперь этот ID есть в HTML
-    data: nsbuSnippets, 
-    last: -1 
-  }
-};
-
-function refreshBlock(type) {
-  const block = textElements[type];
-  if (!block.el) return; // Защита от ошибок, если элемент не найден
-
-  block.el.style.opacity = 0;
-
-  setTimeout(() => {
-    let next;
-    do {
-      next = Math.floor(Math.random() * block.data.length);
-    } while (next === block.last && block.data.length > 1);
-
-    block.last = next;
-    block.el.innerText = block.data[next];
-    block.el.style.opacity = 1;
-  }, 500);
-}
-
-// Кнопки
-document.getElementById("random-btn").onclick = () => refreshBlock('msfo');
-document.getElementById("nsbu-btn").onclick = () => refreshBlock('nsbu');
-
-// Клавиатура
-document.addEventListener("keydown", (e) => {
-  if (e.code === "Space") { refreshBlock('msfo'); refreshBlock('nsbu'); }
-  if (e.key === "ArrowUp") refreshBlock('msfo');
-  if (e.key === "ArrowDown") refreshBlock('nsbu');
-});
-
-// Авто-старт
-['msfo', 'nsbu'].forEach((type, i) => {
-  refreshBlock(type);
-  setInterval(() => refreshBlock(type), 30000 + (i * 5000));
-});
-
-</script>
